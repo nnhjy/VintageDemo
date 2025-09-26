@@ -1,0 +1,9 @@
+from_asset,to_asset,milestone_year,investable,variable_cost,reactance,dc_opf
+ens,demand,2050,false,0.18,0.3,false
+ens,demand,2030,false,0.18,0.3,false
+wind20,demand,2030,false,0.001,0.3,false
+wind20,demand,2050,false,0.001,0.3,false
+wind30,demand,2030,false,0.001,0.3,false
+wind30,demand,2050,false,0.001,0.3,false
+wind50,demand,2030,false,0.001,0.3,false
+wind50,demand,2050,false,0.001,0.3,false
