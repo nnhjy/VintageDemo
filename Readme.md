@@ -1,3 +1,5 @@
+[![CC BY-SA 4.0][cc-by-sa-shield]][cc-by-sa]
+
 # Multi-year investment with vintage
 
 - This tutorial is adapted to `TulipaEnergyModel.jl` version >= 0.17.1
