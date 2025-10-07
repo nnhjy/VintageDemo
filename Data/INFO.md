@@ -59,7 +59,7 @@
 - file: [input_ENS_prices_CY2009.xlsx](.\input_ENS_prices_CY2009.xlsx)
 - source: "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Outputs" from 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/)
 - Climate Year 2009 for consistency from 2030-2050
-- 90 percentile of the marginal costs as the `variable_cost` for ens asset (set in `flow-milestone.csv`)
+- 95 percentile of the marginal costs as the `variable_cost` for ens asset (set in `flow-milestone.csv`)
     - 2030: National Trend scenario (the only available)
     - 2040 & 2050: Distributed Energy scenario (more pessimistic than the Global Ambition scenario)
 
