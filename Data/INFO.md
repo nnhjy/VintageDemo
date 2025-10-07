@@ -21,32 +21,48 @@
     | 9     |	UKOH003	        | Hub	                | UK00	    | 51.4269	| 0.936596
     | 10    |	UKOH006	        | Hub	                | UK00	    | 60.1129	| -1.52452
 
+    - ref: [input_node.xlsx](.\input_NODE.xlsx)
 
 # Model Inputs
 
 ## Offshore wind profile
 
-- folder: [OffshoreWindProfiles](.\OffshoreWindProfiles)
+- file: [profiles_offshore_wind.csv](.\profiles_offshore_wind.csv)
 - source: 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/) -> "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Inputs" -> "Pan European Climatic Database (PECD) 3.1"
-- NS nodes: select from [NODE.xlsx](.\OffshoreConfigNS\NODE.xlsx) based on lat and lon
+- NS nodes: select from [input_NODE.xlsx](.\input_NODE.xlsx) based on lat and lon
+- profile selection -> based on the capacity (planned & potential, see sheet `ZONE_POTENTIAL` in [input_GENERATOR.xlsx](.\input_GENERATOR.xlsx))
+    - average of the selected countries per climate year
+    - 2030: DE, UK, DK
+    - 2040: DE, UK, DK, NL
+    - 2050: DE, BE (the only two availables)
 
 ## Offshore configuration
 
 ### Offshore wind techno-economic profile
 
-
+- file: [input_GENERATOR.xlsx](.\input_GENERATOR.xlsx)
+- technology selection: DC_FB_OH
 
 ### Transmission capacity and costs
 
-- sheet `NS2shore` in [GRID.xlsx](.\OffshoreConfigNS\GRID.xlsx)
+- file: [input_GRID.xlsx](.\input_GRID.xlsx) -> sheet `NS2shore`
 - source: 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/) -> "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Inputs" -> "Offshore Hub Modelling Inputs"
-- original [GRID.xlsx](.\OffshoreConfigNS\GRID.xlsx) only contains the reference grids (2025, 2030, 2035, 2040, 2045, 2050),  capacity not explicitly given
+- original [input_GRID.xlsx](.\input_GRID.xlsx) only contains the reference grids (2025, 2030, 2035, 2040, 2045, 2050),  capacity not explicitly given
 - aggregated ONDP identified capacities are read from 2. [ONDP Study Explorer](https://www.entsoe.eu/outlooks/offshore-hub/tyndp-ondp) (2030, 2040, 2050), whereas the subcategories are missing
 - special processing for the UK: according to `Section 6` of 3. [ONDP report on Northern Seas](https://eepublicdownloads.blob.core.windows.net/public-cdn-container/tyndp-documents/ONDP2024/web_entso-e_ONDP_NS_240226.pdf), connection to onshore UK from NS UK hubs only consists of the UKOH001. While direct links exist from BEOH and NLOH to onshore UK, the costs are *weirdly 0* and thus we ignore them as assuming they only serve inter-contry transmission.
 
 - transmission capacity serves as the demand to be fulfilled by offshore wind generation
+- transmission OPEX is modelled as the `variable_cost` for wind asset (set in `flow-milestone.csv`)
+
+#TODO: transmission capacity > offshore wind installation capacity
 
 ## Residue power supply (modelled as Energy Not Served, ENS)
 
-- "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Outputs" from 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/)
+- file: [input_ENS_prices_CY2009.xlsx](.\input_ENS_prices_CY2009.xlsx)
+- source: "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Outputs" from 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/)
 - Climate Year 2009 for consistency from 2030-2050
+- average annual marginal cost as the `variable_cost` for ens asset (set in `flow-milestone.csv`)
+
+# Model setup
+
+#TODO: detail on milestone year and vintage profile: 2025 (start only), 2030, 2040, 2050 with vintage for each milestone -> model big enough
