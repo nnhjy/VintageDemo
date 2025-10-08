@@ -1,0 +1,10 @@
+asset,commission_year,profile_type,profile_name
+wind25,2030,availability,availability2030-wind25
+wind25,2040,availability,availability2040-wind25
+wind25,2050,availability,availability2050-wind25
+wind30,2030,availability,availability2030-wind30
+wind30,2040,availability,availability2040-wind30
+wind30,2050,availability,availability2050-wind30
+wind40,2040,availability,availability2040-wind40
+wind40,2050,availability,availability2050-wind40
+wind50,2050,availability,availability2050-wind50
