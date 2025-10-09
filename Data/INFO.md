@@ -27,7 +27,7 @@
 
 ## Offshore wind profile
 
-- file: [profiles_offshore_wind.csv](.\profiles_offshore_wind.csv)
+- file: [input_profiles_offshore_wind_no-vintage](.\input_profiles_offshore_wind_no-vintage.csv) and [input_profiles_offshore_wind_vintage](.\input_profiles_offshore_wind_vintage.csv)
 - source: 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/) -> "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Inputs" -> "Pan European Climatic Database (PECD) 3.1"
 - NS nodes: select from [input_NODE.xlsx](.\input_NODE.xlsx) based on lat and lon
 - profile selection -> based on the capacity (planned & potential, see sheet `ZONE_POTENTIAL` in [input_GENERATOR.xlsx](.\input_GENERATOR.xlsx))
@@ -65,4 +65,5 @@
 
 # Model setup
 
-#TODO: milestone year and vintage profile: 2025 (start only), 2030, 2040, 2050 with vintage for each milestone
+1. Discount rate = 3% [EUROCONTROL Standard Inputs for Economic Analyses](https://ansperformance.eu/economics/cba/standard-inputs/latest/chapters/discount_rate.html#:~:text=The%20discount%20rate%20is%20the%20annual%20rate%20used,%5B1%5D%20A%20nominal%20discount%20rate%20has%20three%20components%3A)
+2. WACC for offshore wind = 2.5% [IRENA 2023](https://www.irena.org/Publications/2023/May/The-cost-of-financing-for-renewable-power), [IEA 2021](https://www.iea.org/reports/cost-of-capital-observatory/tools-and-analysis), 
