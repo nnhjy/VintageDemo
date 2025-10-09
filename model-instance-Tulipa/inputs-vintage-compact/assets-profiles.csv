@@ -1,6 +1,5 @@
 asset,commission_year,profile_type,profile_name
-demand,2030,demand,demand-demand
-demand,2050,demand,demand-demand
-wind,2020,availability,availability-wind2020
-wind,2030,availability,availability-wind2030
-wind,2050,availability,availability-wind2050
+wind,2025,availability,availability2030-2050-wind25
+wind,2030,availability,availability2030-2050-wind30
+wind,2040,availability,availability2040-2050-wind40
+wind,2050,availability,availability2050-wind50

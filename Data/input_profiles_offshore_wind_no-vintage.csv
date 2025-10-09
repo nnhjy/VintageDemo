@@ -1,9 +1,9 @@
-﻿asset,commission_year,profile_name,,profile_name,year,rep_period,timestep,value CY_1998,profile_name,year,rep_period,timestep,value CY_1998,profile_name,year,rep_period,timestep,value CY_1998
-wind,2030,availability-wind2030,,availability-wind2030,2030,1,1,0.532765605,availability-wind2040,2040,1,1,0.500342061,availability-wind2050,2050,1,1,0.406416902
-wind,2040,availability-wind2040,,availability-wind2030,2030,1,2,0.562523597,availability-wind2040,2040,1,2,0.532514716,availability-wind2050,2050,1,2,0.447654866
-wind,2050,availability-wind2050,,availability-wind2030,2030,1,3,0.565829997,availability-wind2040,2040,1,3,0.550719822,availability-wind2050,2050,1,3,0.413486752
-,,,,availability-wind2030,2030,1,4,0.560329366,availability-wind2040,2040,1,4,0.562447319,availability-wind2050,2050,1,4,0.391050472
-,,,,availability-wind2030,2030,1,5,0.588469581,availability-wind2040,2040,1,5,0.616408533,availability-wind2050,2050,1,5,0.475163429
+﻿for reference:,settings in,,copy the right columns into,profile_name,year,rep_period,timestep,value CY_1998,profile_name,year,rep_period,timestep,value CY_1998,profile_name,year,rep_period,timestep,value CY_1998
+,assets-profiles.csv,,profiles-rep-periods.csv,availability-wind2030,2030,1,1,0.532765605,availability-wind2040,2040,1,1,0.500342061,availability-wind2050,2050,1,1,0.406416902
+asset,commission_year,profile_type,profile_name,availability-wind2030,2030,1,2,0.562523597,availability-wind2040,2040,1,2,0.532514716,availability-wind2050,2050,1,2,0.447654866
+wind,2030,availability,availability-wind2030,availability-wind2030,2030,1,3,0.565829997,availability-wind2040,2040,1,3,0.550719822,availability-wind2050,2050,1,3,0.413486752
+wind,2040,availability,availability-wind2040,availability-wind2030,2030,1,4,0.560329366,availability-wind2040,2040,1,4,0.562447319,availability-wind2050,2050,1,4,0.391050472
+wind,2050,availability,availability-wind2050,availability-wind2030,2030,1,5,0.588469581,availability-wind2040,2040,1,5,0.616408533,availability-wind2050,2050,1,5,0.475163429
 ,,,,availability-wind2030,2030,1,6,0.653235491,availability-wind2040,2040,1,6,0.688753788,availability-wind2050,2050,1,6,0.592909212
 ,,,,availability-wind2030,2030,1,7,0.732365894,availability-wind2040,2040,1,7,0.766934194,availability-wind2050,2050,1,7,0.698054658
 ,,,,availability-wind2030,2030,1,8,0.81444143,availability-wind2040,2040,1,8,0.846591503,availability-wind2050,2050,1,8,0.802580591

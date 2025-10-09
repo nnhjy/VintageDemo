@@ -1,3 +1,13 @@
 from_asset,to_asset,carrier,is_transport,capacity,technical_lifetime,economic_lifetime,discount_rate,investment_integer
-ens,demand,electricity,false,0.0,10,1,0.02,false
-wind,demand,electricity,false,0.0,10,1,0.02,false
+ensBE,demandBE,electricity,FALSE,0,1,1,0.02,FALSE
+ensDE,demandDE,electricity,FALSE,0,1,1,0.02,FALSE
+ensDK,demandDK,electricity,FALSE,0,1,1,0.02,FALSE
+ensNL,demandNL,electricity,FALSE,0,1,1,0.02,FALSE
+ensNO,demandNO,electricity,FALSE,0,1,1,0.02,FALSE
+ensUK,demandUK,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandBE,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandDE,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandDK,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandNL,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandNO,electricity,FALSE,0,1,1,0.02,FALSE
+wind,demandUK,electricity,FALSE,0,1,1,0.02,FALSE
