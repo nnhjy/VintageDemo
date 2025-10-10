@@ -28,6 +28,6 @@ TulipaTutorials/
 .vscode/
 *.code-workspace
 ReadmeEuler.md
-outputs-*
+# outputs-*
 *.zip
 raw_*/
