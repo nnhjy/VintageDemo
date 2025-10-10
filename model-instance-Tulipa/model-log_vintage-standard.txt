@@ -1,0 +1,86 @@
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+                                                                                                                                             Time                    Allocations      
+                                                                                                                                    ───────────────────────   ────────────────────────
+                                                         Tot / % measured:                                                             5124075h /   0.0%          8.08GiB /  79.1%    
+
+Section                                                                                                                     ncalls     time    %tot     avg     alloc    %tot      avg
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+solve_model!                                                                                                                     1    83.7s   62.5%   83.7s    901MiB   13.8%   901MiB
+  total solver time                                                                                                              1    83.6s   62.3%   83.6s    859MiB   13.1%   859MiB
+create_model!                                                                                                                    1    21.2s   15.8%   21.2s   3.89GiB   60.9%  3.89GiB
+  create_model                                                                                                                   1    18.0s   13.4%   18.0s   3.86GiB   60.5%  3.86GiB
+    add_flow_variables!                                                                                                          1    5.00s    3.7%   5.00s   1.26GiB   19.7%  1.26GiB
+    add_expressions_to_constraints!                                                                                              1    4.45s    3.3%   4.45s    660MiB   10.1%   660MiB
+      add_expression_terms_rep_period_constraints!                                                                               9    2.56s    1.9%   284ms    272MiB    4.2%  30.2MiB
+      add_expression_terms_rep_period_constraints! for capacity_outgoing_simple_method                                           1    978ms    0.7%   978ms    352MiB    5.4%   352MiB
+      add_expression_terms_over_clustered_year_constraints!                                                                      3    578ms    0.4%   193ms   24.9MiB    0.4%  8.30MiB
+      add_expression_terms_rep_period_constraints! for capacity_outgoing_simple_method_non_investable_storage_with_binary        1   24.9ms    0.0%  24.9ms   32.9KiB    0.0%  32.9KiB
+      add_expression_terms_rep_period_constraints! for capacity_incoming_simple_method_non_investable_storage_with_binary        1   23.1ms    0.0%  23.1ms   32.9KiB    0.0%  32.9KiB
+      add_expression_terms_rep_period_constraints! for min_incoming_flow_for_transport_flows                                     1   22.6ms    0.0%  22.6ms   32.8KiB    0.0%  32.8KiB
+      add_expression_terms_rep_period_constraints! for capacity_outgoing_simple_method_investable_storage_with_binary            1   22.6ms    0.0%  22.6ms   32.9KiB    0.0%  32.9KiB
+      add_expression_terms_rep_period_constraints! for min_outgoing_flow_for_transport_flows_without_unit_commitment             1   22.5ms    0.0%  22.5ms   32.9KiB    0.0%  32.9KiB
+      add_expression_terms_rep_period_constraints! for capacity_outgoing_compact_method                                          1   22.2ms    0.0%  22.2ms   32.7KiB    0.0%  32.7KiB
+      add_expression_terms_rep_period_constraints! for capacity_incoming_simple_method_investable_storage_with_binary            1   22.2ms    0.0%  22.2ms   32.9KiB    0.0%  32.9KiB
+      add_expression_terms_rep_period_constraints! for capacity_incoming_simple_method                                           1   21.8ms    0.0%  21.8ms   32.7KiB    0.0%  32.7KiB
+      attach is_charging expression to capacity_incoming_simple_method                                                           1   20.6ms    0.0%  20.6ms    858KiB    0.0%   858KiB
+      attach is_charging expression to capacity_incoming_simple_method_non_investable_storage_with_binary                        1   11.4ms    0.0%  11.4ms   14.3KiB    0.0%  14.3KiB
+      attach is_charging expression to capacity_outgoing_simple_method                                                           1   10.2ms    0.0%  10.2ms   2.02MiB    0.0%  2.02MiB
+      attach units_on expression to min_output_flow_with_unit_commitment                                                         1   8.86ms    0.0%  8.86ms   15.9KiB    0.0%  15.9KiB
+      attach is_charging expression to min_outgoing_flow_for_transport_flows_without_unit_commitment                             1   8.50ms    0.0%  8.50ms   14.3KiB    0.0%  14.3KiB
+      attach is_charging expression to min_incoming_flow_for_transport_flows                                                     1   8.31ms    0.0%  8.31ms   14.1KiB    0.0%  14.1KiB
+      attach is_charging expression to capacity_outgoing_simple_method_investable_storage_with_binary                            1   8.25ms    0.0%  8.25ms   14.3KiB    0.0%  14.3KiB
+      attach is_charging expression to capacity_outgoing_simple_method_non_investable_storage_with_binary                        1   8.21ms    0.0%  8.21ms   14.3KiB    0.0%  14.3KiB
+      attach is_charging expression to capacity_outgoing_compact_method                                                          1   8.12ms    0.0%  8.12ms   14.1KiB    0.0%  14.1KiB
+      attach is_charging expression to capacity_incoming_simple_method_investable_storage_with_binary                            1   8.07ms    0.0%  8.07ms   14.3KiB    0.0%  14.3KiB
+      attach units_on expression to max_output_flow_with_basic_unit_commitment                                                   1   7.67ms    0.0%  7.67ms   14.1KiB    0.0%  14.1KiB
+      attach units_on expression to max_ramp_with_unit_commitment                                                                1   7.59ms    0.0%  7.59ms   14.1KiB    0.0%  14.1KiB
+    add_capacity_constraints!                                                                                                    1    3.96s    3.0%   3.96s   1.05GiB   16.5%  1.05GiB
+    add_objective!                                                                                                               1    2.17s    1.6%   2.17s    391MiB    6.0%   391MiB
+    add_consumer_constraints!                                                                                                    1    1.26s    0.9%   1.26s    437MiB    6.7%   437MiB
+    add_ramping_constraints!                                                                                                     1    302ms    0.2%   302ms   36.8MiB    0.6%  36.8MiB
+    add_investment_variables!                                                                                                    1    245ms    0.2%   245ms   19.3MiB    0.3%  19.3MiB
+    add_decommission_variables!                                                                                                  1    193ms    0.1%   193ms   17.3MiB    0.3%  17.3MiB
+    create_multi_year_expressions!                                                                                               1    115ms    0.1%   115ms   5.80MiB    0.1%  5.80MiB
+    add_storage_constraints!                                                                                                     1   83.3ms    0.1%  83.3ms   6.97MiB    0.1%  6.97MiB
+    add_storage_variables!                                                                                                       1   40.9ms    0.0%  40.9ms   3.28MiB    0.1%  3.28MiB
+    add_flows_relationships_constraints!                                                                                         1   24.2ms    0.0%  24.2ms   1.65MiB    0.0%  1.65MiB
+    add_energy_constraints!                                                                                                      1   23.4ms    0.0%  23.4ms   1.64MiB    0.0%  1.64MiB
+    add_group_constraints!                                                                                                       1   18.2ms    0.0%  18.2ms   1.64MiB    0.0%  1.64MiB
+    add_vintage_flow_variables!                                                                                                  1   14.9ms    0.0%  14.9ms    841KiB    0.0%   841KiB
+    add_dc_power_flow_constraints!                                                                                               1   14.4ms    0.0%  14.4ms    849KiB    0.0%   849KiB
+    add_transport_constraints!                                                                                                   1   13.6ms    0.0%  13.6ms    850KiB    0.0%   850KiB
+    add_storage_expressions!                                                                                                     1   13.6ms    0.0%  13.6ms    845KiB    0.0%   845KiB
+    add_vintage_flow_sum_constraints!                                                                                            1   12.9ms    0.0%  12.9ms    841KiB    0.0%   841KiB
+    add_conversion_constraints!                                                                                                  1   11.4ms    0.0%  11.4ms    839KiB    0.0%   839KiB
+    add_unit_commitment_variables!                                                                                               1   10.0ms    0.0%  10.0ms    838KiB    0.0%   838KiB
+    add_power_flow_variables!                                                                                                    1   9.62ms    0.0%  9.62ms    837KiB    0.0%   837KiB
+    add_hub_constraints!                                                                                                         1   41.4μs    0.0%  41.4μs   2.00KiB    0.0%  2.00KiB
+save_solution!                                                                                                                   1    20.2s   15.1%   20.2s   0.97GiB   15.2%  0.97GiB
+  compute_dual_variables                                                                                                         1    16.3s   12.2%   16.3s   45.8MiB    0.7%  45.8MiB
+create EnergyProblem from connection                                                                                             1    7.59s    5.7%   7.59s    662MiB   10.1%   662MiB
+  create_internal_structure                                                                                                      1    6.26s    4.7%   6.26s    599MiB    9.2%   599MiB
+    create_lowest_resolution_table                                                                                               1    2.79s    2.1%   2.79s    517MiB    7.9%   517MiB
+      append t_lowest_all_flows rows                                                                                             1    1.45s    1.1%   1.45s    260MiB    4.0%   260MiB
+      append t_lowest_all rows                                                                                                   1    1.34s    1.0%   1.34s    257MiB    3.9%   257MiB
+      append t_lowest_flows_relationship rows                                                                                    1    461μs    0.0%   461μs   2.75KiB    0.0%  2.75KiB
+      append t_lowest_flows_conversion_balance rows                                                                              1    344μs    0.0%   344μs   2.75KiB    0.0%  2.75KiB
+    validate data                                                                                                                1    1.07s    0.8%   1.07s   69.5MiB    1.1%  69.5MiB
+      no duplicate rows                                                                                                          1    337ms    0.3%   337ms   23.5MiB    0.4%  23.5MiB
+      valid schema's oneOf constraints                                                                                           1    190ms    0.1%   190ms   16.4MiB    0.3%  16.4MiB
+      data consistency for simple investment                                                                                     1    112ms    0.1%   112ms   5.08MiB    0.1%  5.08MiB
+      has all tables and columns                                                                                                 1    102ms    0.1%   102ms   1.74MiB    0.0%  1.74MiB
+      investable storage assets using binary method should have investment limit > 0                                             1   96.3ms    0.1%  96.3ms   6.27MiB    0.1%  6.27MiB
+      group consistency between tables                                                                                           1   52.9ms    0.0%  52.9ms   6.48MiB    0.1%  6.48MiB
+      consistency between asset_commission and asset_both                                                                        1   50.6ms    0.0%  50.6ms   2.75MiB    0.0%  2.75MiB
+      check DC OPF data                                                                                                          1   49.7ms    0.0%  49.7ms   2.21MiB    0.0%  2.21MiB
+      flow_both only contain transport flows                                                                                     1   29.9ms    0.0%  29.9ms   1.91MiB    0.0%  1.91MiB
+      consistency between asset types and investment methods                                                                     1   27.2ms    0.0%  27.2ms   1.67MiB    0.0%  1.67MiB
+      only transport flows are investable                                                                                        1   24.8ms    0.0%  24.8ms   1.43MiB    0.0%  1.43MiB
+    create_unrolled_partition_tables                                                                                             1    899ms    0.7%   899ms   12.9MiB    0.2%  12.9MiB
+    create_highest_resolution_table                                                                                              1    802ms    0.6%   802ms   8.87KiB    0.0%  8.87KiB
+    create_merged_tables                                                                                                         1    655ms    0.5%   655ms   6.37KiB    0.0%  6.37KiB
+  prepare_profiles_structure                                                                                                     1    692ms    0.5%   692ms   44.6MiB    0.7%  44.6MiB
+  compute_variables_indices                                                                                                      1    226ms    0.2%   226ms   29.0KiB    0.0%  29.0KiB
+  compute_constraints_indices                                                                                                    1    151ms    0.1%   151ms   1.60MiB    0.0%  1.60MiB
+export_solution_to_csv_files                                                                                                     1    1.26s    0.9%   1.26s   4.24KiB    0.0%  4.24KiB
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────

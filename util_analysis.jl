@@ -29,10 +29,11 @@ function objective_terms_value(
     DB_conn::DuckDB.DB
 )
     system_investment_cost = _obj_investment_cost(TulipaProblemInstance, DB_conn)
-    system_fixed_om_cost = 
-        + _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_compact)) 
-        + _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_simple))
-    total_variable_om_cost = _obj_flows_operational_cost(TulipaProblemInstance, DB_conn)
+    system_fixed_om_cost = sum([
+        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_compact)), 
+        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_simple))
+    ])
+    total_variable_om_cost = _obj_variable_om_cost(TulipaProblemInstance, DB_conn)
     return system_investment_cost, system_fixed_om_cost, total_variable_om_cost
 end
 
@@ -43,15 +44,16 @@ function _obj_investment_cost(TulipaProblemInstance::TulipaEnergyModel.EnergyPro
         DB_conn,
         "SELECT
             var.id,
-            obj.weight_for_asset_investment_discount
-                * obj.investment_cost
-                * obj.capacity
+            t_objective_assets.weight_for_asset_investment_discount
+                * t_objective_assets.investment_cost
+                * t_objective_assets.capacity
                 AS cost,
         FROM var_assets_investment AS var
-        LEFT JOIN t_objective_assets as obj
-            ON var.asset = obj.asset
-            AND var.milestone_year = obj.milestone_year
-        ORDER BY var.id
+        LEFT JOIN t_objective_assets
+            ON var.asset = t_objective_assets.asset
+            AND var.milestone_year = t_objective_assets.milestone_year
+        ORDER BY
+            var.id
         ",
     )
     
@@ -77,21 +79,22 @@ function _obj_fixed_om_cost(
         DB_conn,
         "SELECT
             expr.id,
-            obj.weight_for_operation_discounts
+            t_objective_assets.weight_for_operation_discounts
                 * asset_commission.fixed_cost
-                * obj.capacity
+                * t_objective_assets.capacity
                 AS cost,
         FROM expr_available_asset_units_simple_method AS expr
         LEFT JOIN asset_commission
             ON expr.asset = asset_commission.asset
             AND expr.commission_year = asset_commission.commission_year
-        LEFT JOIN t_objective_assets as obj
-            ON expr.asset = obj.asset
-            AND expr.milestone_year = obj.milestone_year
-        ORDER BY expr.id
+        LEFT JOIN t_objective_assets
+            ON expr.asset = t_objective_assets.asset
+            AND expr.milestone_year = t_objective_assets.milestone_year
+        ORDER BY
+            expr.id
         ",
     )
-    
+
     system_fixed_cost_simple_method = @expression(
         TulipaProblemInstance.model,
         sum(
@@ -114,18 +117,19 @@ function _obj_fixed_om_cost(
         DB_conn,
         "SELECT
             expr.id,
-            obj.weight_for_operation_discounts
+            t_objective_assets.weight_for_operation_discounts
                 * asset_commission.fixed_cost
-                * obj.capacity
+                * t_objective_assets.capacity
                 AS cost,
         FROM expr_available_asset_units_compact_method AS expr
         LEFT JOIN asset_commission
             ON expr.asset = asset_commission.asset
             AND expr.commission_year = asset_commission.commission_year
-        LEFT JOIN t_objective_assets as obj
-            ON expr.asset = obj.asset
-            AND expr.milestone_year = obj.milestone_year
-        ORDER BY expr.id
+        LEFT JOIN t_objective_assets
+            ON expr.asset = t_objective_assets.asset
+            AND expr.milestone_year = t_objective_assets.milestone_year
+        ORDER BY
+            expr.id
         ",
     )
  
@@ -139,50 +143,42 @@ function _obj_fixed_om_cost(
     JuMP.value(system_fixed_cost_compact_method)
 end
 
-function _obj_flows_operational_cost(
+function _obj_variable_om_cost(
     TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
     DB_conn::DuckDB.DB
 )
     indices = DuckDB.query(
         DB_conn,
-        "WITH rp_weight AS (
-            SELECT
-                year,
-                rep_period,
-                SUM(weight) AS weight_sum
-            FROM rep_periods_mapping
-            GROUP BY year, rep_period
-        ),
-        rp_res AS (
-            SELECT
-                year,
-                rep_period,
-                ANY_VALUE(resolution) AS resolution
-            FROM rep_periods_data
-            GROUP BY year, rep_period
-        )
-        SELECT
+        "SELECT
             var.id,
-            obj.weight_for_operation_discounts
-                * rp_weight.weight_sum
-                * rp_res.resolution
+            t_objective_flows.weight_for_operation_discounts
+                * rpinfo.weight_sum
+                * rpinfo.resolution
                 * (var.time_block_end - var.time_block_start + 1)
-                * obj.variable_cost
+                * t_objective_flows.variable_cost
                 AS cost,
         FROM var_flow AS var
-        LEFT JOIN t_objective_flows as obj
-            ON var.from_asset = obj.from_asset
-            AND var.to_asset = obj.to_asset
-            AND var.year = obj.milestone_year
-        LEFT JOIN rp_weight
-            ON var.year = rp_weight.year
-            AND var.rep_period = rp_weight.rep_period
-        LEFT JOIN rp_res
-            ON var.year = rp_res.year
-            AND var.rep_period = rp_res.rep_period
+        LEFT JOIN t_objective_flows
+            ON var.from_asset = t_objective_flows.from_asset
+            AND var.to_asset = t_objective_flows.to_asset
+            AND var.year = t_objective_flows.milestone_year
+        LEFT JOIN (
+            SELECT
+                rpmap.year,
+                rpmap.rep_period,
+                SUM(weight) AS weight_sum,
+                ANY_VALUE(rpdata.resolution) AS resolution
+            FROM rep_periods_mapping AS rpmap
+            LEFT JOIN rep_periods_data AS rpdata
+                ON rpmap.year=rpdata.year AND rpmap.rep_period=rpdata.rep_period
+            GROUP BY rpmap.year, rpmap.rep_period
+        ) AS rpinfo
+            ON var.year = rpinfo.year
+            AND var.rep_period = rpinfo.rep_period
         LEFT JOIN asset
             ON asset.asset = var.from_asset
         WHERE asset.investment_method != 'semi-compact'
+        ORDER BY var.id
         ",
     )
  
@@ -190,10 +186,8 @@ function _obj_flows_operational_cost(
     # because there are more flow variables than the number of rows in indices,
     # i.e., we only consider the costs of the flows that are not in semi-compact method
     var_flow = TulipaProblemInstance.variables[:flow].container
- 
     flows_operational_cost = @expression(
         TulipaProblemInstance.model, sum(row.cost * var_flow[row.id] for row in indices)
     )
- 
     return JuMP.value(flows_operational_cost)
 end
