@@ -24,10 +24,12 @@ docs/site/
 Manifest*.toml
 
 temp_*
+raw_*/
+WIP_*
 TulipaTutorials/
 .vscode/
 *.code-workspace
 ReadmeEuler.md
 # outputs-*
 *.zip
-raw_*/
+
