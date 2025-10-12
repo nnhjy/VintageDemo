@@ -1,26 +1,57 @@
 using TulipaEnergyModel
 using JuMP
 using DuckDB
+using DataFrames
+
+
+# Calculate annual flows between assets that contain specific terms
+# e.g., "wind" to "demand" or "ens" to "demand"
+function annual_flows_between_assets(
+    DB_conn::DuckDB.DB, from_asset_term::String, to_asset_term::String
+)
+    # Create DataFrame with sum per milestone year for wind-to-demand flows
+    df_flow_data = filter(
+        row -> occursin(from_asset_term, row.from_asset) && occursin(to_asset_term, row.to_asset),
+        TIO.get_table(DB_conn, "var_flow")
+    )
+
+    df_flows_by_year = combine(
+        groupby(df_flow_data, :year),
+        :solution => sum => :annual_flow
+    )
+
+    # Convert to TWh and round
+    df_flows_by_year.annual_flow_TWh = round.(df_flows_by_year.annual_flow / 1000, digits=2)
+
+    # Create final DataFrame with desired columns
+    df_flow_summary = DataFrame(
+        milestone_year=df_flows_by_year.year,
+        annual_flow=df_flows_by_year.annual_flow_TWh
+    )
+
+    return df_flow_summary
+end
 
 function print_annual_total_prod(DB_conn::DuckDB.DB, years::Int...)
     for year in years
         println(year, "s")
-        println(
-        "\t wind prodution: $(
-            round(
-                (filter(
-                    row -> occursin("wind", row.from_asset) && occursin("demand", row.to_asset) && row.year == year, 
-                    TIO.get_table(DB_conn, "var_flow")
-                ).solution |> sum) / 1000, digits=2)
-            ) TWh p.a.",
-        "\t market supply: $(
-            round(
-                (filter(
-                    row -> occursin("ens", row.from_asset) && occursin("demand", row.to_asset) && row.year == year, 
-                    TIO.get_table(DB_conn, "var_flow")
-                ).solution |> sum) / 1000 , digits=2) 
-            ) TWh p.a."
-        )
+        filter(
+            row -> row.milestone_year == year, 
+            annual_flows_between_assets(DB_conn, "wind", "demand")
+        ) |> row -> println("\t wind prodution: $(sum(row.annual_flow)) TWh p.a.")
+        filter(
+            row -> row.milestone_year == year, 
+            annual_flows_between_assets(DB_conn, "ens", "demand")
+        ) |> row -> println("\t market supply: $(sum(row.annual_flow)) TWh p.a.")
+        # println(
+        # "\t wind prodution: $(
+        #     round(
+        #         (filter(
+        #             row -> occursin("wind", row.from_asset) && occursin("demand", row.to_asset) && row.year == year, 
+        #             TIO.get_table(DB_conn, "var_flow")
+        #         ).solution |> sum) / 1000, digits=2)
+        #     ) TWh p.a."
+        # )
     end
 end
 
