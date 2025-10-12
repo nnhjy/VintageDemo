@@ -32,4 +32,6 @@ TulipaTutorials/
 ReadmeEuler.md
 # outputs-*
 *.zip
+slurm-*
+*benchmark*
 
