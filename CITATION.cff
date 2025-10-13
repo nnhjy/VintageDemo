@@ -1,0 +1,20 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: "Huang"
+    given-names: "Jiangyi"
+    email: jiahuang@ethz.ch
+    affiliation: Chair of Energy Systems Analysis, ETH Zurich 
+    orcid: "https://orcid.org/0000-0002-0093-2276"
+  - given-names: Ni
+    family-names: Wang
+    email: ni.wang@tno.nl
+    affiliation: TNO
+    orcid: "https://orcid.org/0000-0001-7037-7004"
+title: "Investment energy planning model with technology vintages"
+version: 0.0.1
+# doi: 10.5281/zenodo.1234
+date-released: 2025-10-13
+url: "https://github.com/nnhjy/VintageDemo"
+license: CC-BY-SA 4.0
+

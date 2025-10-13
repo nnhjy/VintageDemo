@@ -2,14 +2,14 @@
 
 [cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
 
-# Multi-year investment with vintage
+# Investment energy planning model with technology vintages
 
-- This tutorial is adapted to `TulipaEnergyModel.jl` version >= 0.17.1
+- This model is built under [`TulipaEnergyModel.jl`](https://github.com/TulipaEnergy/TulipaEnergyModel.jl) framework (`v0.17.1`)
 - You may need to run the following command in terminal **First**!
 
 ```bash
 cd path/to/VintageDemo
-julia ./setup_julia_env.jl
+julia ./jl_env_setup.jl
 ```
 
 to ensure
