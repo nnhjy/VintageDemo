@@ -1,6 +1,7 @@
 ![CC BY-SA 4.0][cc-by-sa-shield]
 
 [cc-by-sa-shield]: https://img.shields.io/badge/License-CC%20BY--SA%204.0-lightgrey.svg
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.17675329.svg)](https://doi.org/10.5281/zenodo.17675329)
 
 # Investment energy planning model with technology vintages
 
