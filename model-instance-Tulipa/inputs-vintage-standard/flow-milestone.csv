@@ -1,4 +1,4 @@
-from_asset,to_asset,milestone_year,investable,variable_cost,reactance,dc_opf
+from_asset,to_asset,milestone_year,investable,operational_cost,reactance,dc_opf
 ensBE,demandBE,2030,FALSE,0.107,0.3,FALSE
 ensDE,demandDE,2030,FALSE,0.109,0.3,FALSE
 ensDK,demandDK,2030,FALSE,0.109,0.3,FALSE

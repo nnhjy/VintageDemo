@@ -186,7 +186,7 @@ function _obj_variable_om_cost(
                 * rpinfo.weight_sum
                 * rpinfo.resolution
                 * (var.time_block_end - var.time_block_start + 1)
-                * t_objective_flows.variable_cost
+                * t_objective_flows.operational_cost
                 AS cost,
         FROM var_flow AS var
         LEFT JOIN t_objective_flows
@@ -221,4 +221,4 @@ function _obj_variable_om_cost(
         TulipaProblemInstance.model, sum(row.cost * var_flow[row.id] for row in indices)
     )
     return JuMP.value(flows_operational_cost)
-end
+end;
