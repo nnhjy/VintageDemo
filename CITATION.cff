@@ -11,10 +11,7 @@ authors:
     email: ni.wang@tno.nl
     affiliation: TNO
     orcid: "https://orcid.org/0000-0001-7037-7004"
-title: 
-version: 
-doi: 
-date-released: 
+title: "VintageDemo: Multi-year investment planning model instances to demonstrate technology vintages"
 url: "https://github.com/nnhjy/VintageDemo"
 license: "CC-BY-SA 4.0"
 
