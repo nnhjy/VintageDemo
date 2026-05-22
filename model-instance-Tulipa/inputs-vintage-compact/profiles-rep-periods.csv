@@ -1,4 +1,4 @@
-profile_name,year,rep_period,timestep,value
+profile_name,milestone_year,rep_period,timestep,value
 availability2030-2050-wind25,2030,1,1,0.508
 availability2030-2050-wind25,2030,1,2,0.515
 availability2030-2050-wind25,2030,1,3,0.500
