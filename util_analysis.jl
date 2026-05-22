@@ -16,7 +16,7 @@ function annual_flows_between_assets(
     )
 
     df_flows_by_year = combine(
-        groupby(df_flow_data, :year),
+        groupby(df_flow_data, :milestone_year),
         :solution => sum => :annual_flow
     )
 
@@ -25,7 +25,7 @@ function annual_flows_between_assets(
 
     # Create final DataFrame with desired columns
     df_flow_summary = DataFrame(
-        milestone_year=df_flows_by_year.year,
+        milestone_year=df_flows_by_year.milestone_year,
         annual_flow=df_flows_by_year.annual_flow_TWh
     )
 
@@ -43,15 +43,6 @@ function print_annual_total_prod(DB_conn::DuckDB.DB, years::Int...)
             row -> row.milestone_year == year, 
             annual_flows_between_assets(DB_conn, "ens", "demand")
         ) |> row -> println("\t market supply: $(sum(row.annual_flow)) TWh p.a.")
-        # println(
-        # "\t wind prodution: $(
-        #     round(
-        #         (filter(
-        #             row -> occursin("wind", row.from_asset) && occursin("demand", row.to_asset) && row.year == year, 
-        #             TIO.get_table(DB_conn, "var_flow")
-        #         ).solution |> sum) / 1000, digits=2)
-        #     ) TWh p.a."
-        # )
     end
 end
 
@@ -61,8 +52,8 @@ function objective_terms_value(
 )
     system_investment_cost = _obj_investment_cost(TulipaProblemInstance, DB_conn)
     system_fixed_om_cost = sum([
-        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_compact)), 
-        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:investment_method_simple))
+        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:vintage_method_aggregated)), 
+        _obj_fixed_om_cost(TulipaProblemInstance, DB_conn, Val(:vintage_method_compact))
     ])
     total_variable_om_cost = _obj_variable_om_cost(TulipaProblemInstance, DB_conn)
     return system_investment_cost, system_fixed_om_cost, total_variable_om_cost
@@ -101,11 +92,11 @@ end
 function _obj_fixed_om_cost(
     TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
     DB_conn::DuckDB.DB, 
-    ::Val{:investment_method_simple}
+    ::Val{:vintage_method_aggregated}
 )
-    expr_available_asset_units_simple_method = TulipaProblemInstance.expressions[:available_asset_units_simple_method]
+    expr_available_asset_units_aggregated_vintage_method = TulipaProblemInstance.expressions[:available_asset_units_aggregated_vintage_method]
 
-    # Select expressions for simple method
+    # Select expressions for the aggregated method
     indices = DuckDB.query(
         DB_conn,
         "SELECT
@@ -114,7 +105,7 @@ function _obj_fixed_om_cost(
                 * asset_commission.fixed_cost
                 * t_objective_assets.capacity
                 AS cost,
-        FROM expr_available_asset_units_simple_method AS expr
+        FROM expr_available_asset_units_aggregated_vintage_method AS expr
         LEFT JOIN asset_commission
             ON expr.asset = asset_commission.asset
             AND expr.commission_year = asset_commission.commission_year
@@ -126,22 +117,22 @@ function _obj_fixed_om_cost(
         ",
     )
 
-    system_fixed_cost_simple_method = @expression(
+    system_fixed_cost_aggregated_vintage_method = @expression(
         TulipaProblemInstance.model,
         sum(
             row.cost * expr_avail for (row, expr_avail) in
-            zip(indices, expr_available_asset_units_simple_method.expressions[:assets])
+            zip(indices, expr_available_asset_units_aggregated_vintage_method.expressions[:assets])
         )
     )
-    JuMP.value(system_fixed_cost_simple_method)
+    JuMP.value(system_fixed_cost_aggregated_vintage_method)
 end
 
 function _obj_fixed_om_cost(
     TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
     DB_conn::DuckDB.DB, 
-    ::Val{:investment_method_compact}
+    ::Val{:vintage_method_compact}
 )
-    expr_available_asset_units_compact_method = TulipaProblemInstance.expressions[:available_asset_units_compact_method]
+    expr_available_asset_units_compact_vintage_method = TulipaProblemInstance.expressions[:available_asset_units_compact_vintage_method]
     
     # Select expressions for compact method
     indices = DuckDB.query(
@@ -152,7 +143,7 @@ function _obj_fixed_om_cost(
                 * asset_commission.fixed_cost
                 * t_objective_assets.capacity
                 AS cost,
-        FROM expr_available_asset_units_compact_method AS expr
+        FROM expr_available_asset_units_compact_vintage_method AS expr
         LEFT JOIN asset_commission
             ON expr.asset = asset_commission.asset
             AND expr.commission_year = asset_commission.commission_year
@@ -164,14 +155,14 @@ function _obj_fixed_om_cost(
         ",
     )
  
-    system_fixed_cost_compact_method = @expression(
+    system_fixed_cost_compact_vintage_method = @expression(
         TulipaProblemInstance.model,
         sum(
             row.cost * expr_avail for (row, expr_avail) in
-            zip(indices, expr_available_asset_units_compact_method.expressions[:assets])
+            zip(indices, expr_available_asset_units_compact_vintage_method.expressions[:assets])
         )
     )
-    JuMP.value(system_fixed_cost_compact_method)
+    JuMP.value(system_fixed_cost_compact_vintage_method)
 end
 
 function _obj_variable_om_cost(
@@ -192,23 +183,23 @@ function _obj_variable_om_cost(
         LEFT JOIN t_objective_flows
             ON var.from_asset = t_objective_flows.from_asset
             AND var.to_asset = t_objective_flows.to_asset
-            AND var.year = t_objective_flows.milestone_year
+            AND var.milestone_year = t_objective_flows.milestone_year
         LEFT JOIN (
             SELECT
-                rpmap.year,
+                rpmap.milestone_year,
                 rpmap.rep_period,
                 SUM(weight) AS weight_sum,
                 ANY_VALUE(rpdata.resolution) AS resolution
             FROM rep_periods_mapping AS rpmap
             LEFT JOIN rep_periods_data AS rpdata
-                ON rpmap.year=rpdata.year AND rpmap.rep_period=rpdata.rep_period
-            GROUP BY rpmap.year, rpmap.rep_period
+                ON rpmap.milestone_year=rpdata.milestone_year AND rpmap.rep_period=rpdata.rep_period
+            GROUP BY rpmap.milestone_year, rpmap.rep_period
         ) AS rpinfo
-            ON var.year = rpinfo.year
+            ON var.milestone_year = rpinfo.milestone_year
             AND var.rep_period = rpinfo.rep_period
         LEFT JOIN asset
             ON asset.asset = var.from_asset
-        WHERE asset.investment_method != 'semi-compact'
+        WHERE asset.vintage_method != 'compact_efficiencies'
         ORDER BY var.id
         ",
     )
