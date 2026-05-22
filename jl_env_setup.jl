@@ -23,8 +23,8 @@ _fix_version = (@isdefined fix_version) ? fix_version : false
 # Optionally, fix package versions to ensure compatibility
 _fix_version && begin
     println("adding core Tulipa packages ...")
-    Pkg.add(name="TulipaEnergyModel", version="0.18.2")   # exact version
-    Pkg.add(name="TulipaIO", version="0.5.0")    # latest in the 0.5.x series
+    Pkg.add(name="TulipaEnergyModel", version="0.21.0")
+    Pkg.add(name="TulipaIO", version="0.5.1")
     
     println("adding core supporting packages for Tulipa ...")
     Pkg.add("DuckDB")    # latest release from regiestry
@@ -32,7 +32,7 @@ _fix_version && begin
     Pkg.add("HiGHS")    # latest release version from regiestry
     
     println("adding Tulipa ancillary packages ...")
-    Pkg.add(name="TulipaClustering", version="0.5.0") # latest in the 0.4.x series
+    Pkg.add(name="TulipaClustering", version="0.5.2")
     Pkg.add("Distances")    # latest release version from regiestry
 
     println("adding supporting packages for in-depth analysis ...")

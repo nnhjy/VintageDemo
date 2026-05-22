@@ -5,7 +5,7 @@
 
 # Investment energy planning model with technology vintages
 
-- This model is built using [`TulipaEnergyModel.jl`](https://github.com/TulipaEnergy/TulipaEnergyModel.jl) framework (`v0.18.2`)
+- This model is built using [`TulipaEnergyModel.jl`](https://github.com/TulipaEnergy/TulipaEnergyModel.jl) framework (`v0.21.0`)
 - You may need to run the following command in terminal **First**!
 
 ```bash
@@ -15,6 +15,6 @@ julia ./jl_env_setup.jl
 
 to ensure
 1. Active working directory under the project folder `VintageDemo`
-2. `julia` gets loaded in the system (version: `lts v1.10.10`)
+2. `julia` gets loaded in the system (release version: `v1.12.6`)
 3. `IJulia.jl` package is correctly built for notebook cell running
 4. `Tulipa` packages are installed
