@@ -7,6 +7,7 @@
 - North Sea scope 
     
     - lat: 50.5 ~ 62.0, NS lon: -3.7 ~ 8.6
+        - ref: [IHO North Sea boundaries](http://marineregions.org/mrgid/2350) (CRS format: `EPSG:4326`)
 
     |	    |   OFFSHORE_NODE	| OFFSHORE_NODE_TYPE	| HOME_NODE	| LAT	    | LON
     | ----- | ---------------   | --------------------  | --------- | --------  | --------
@@ -21,7 +22,7 @@
     | 9     |	UKOH003	        | Hub	                | UK00	    | 51.4269	| 0.936596
     | 10    |	UKOH006	        | Hub	                | UK00	    | 60.1129	| -1.52452
 
-    - ref: [input_node.xlsx](.\input_NODE.xlsx)
+    - source: `NODE.xlsx` at [ONDP Offshore Hub Modelling Inputs](https://2024-data.entsos-tyndp-scenarios.eu/files/scenarios-inputs/Offshore-hubs.zip)
 
 # Model Inputs
 
@@ -29,7 +30,7 @@
 
 - file: [input_profiles_offshore_wind_no-vintage](.\input_profiles_offshore_wind_no-vintage.csv) and [input_profiles_offshore_wind_vintage](.\input_profiles_offshore_wind_vintage.csv)
 - source: 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/) -> "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Inputs" -> "Pan European Climatic Database (PECD) 3.1"
-- NS nodes: select from [input_NODE.xlsx](.\input_NODE.xlsx) based on lat and lon
+- NS nodes: select from [input_GRID.xlsx](.\input_GRID.xlsx) based on lat and lon
 - profile selection -> based on the capacity (planned & potential, see sheet `ZONE_POTENTIAL` in [input_GENERATOR.xlsx](.\input_GENERATOR.xlsx))
     - average of the selected countries per climate year
     - 2030: DE, UK, DK
@@ -58,7 +59,7 @@
 
 - file: [input_ENS_prices_CY2009.xlsx](.\input_ENS_prices_CY2009.xlsx)
 - source: "ENTSO-E & ENTSOG TYNDP 2024 Scenarios  – Outputs" from 1. [TYNFP2024](https://2024.entsos-tyndp-scenarios.eu/download/)
-- Climate Year 2009 for consistency from 2030-2050
+- Choice of Climate Year CY2009 for consistency from 2030-2050
 - 95 percentile of the marginal costs as the `variable_cost` for ens asset (set in `flow-milestone.csv`)
     - 2030: National Trend scenario (the only available)
     - 2040 & 2050: Distributed Energy scenario (more pessimistic than the Global Ambition scenario)
