@@ -1,0 +1,7 @@
+instance,asset,technical_lifetime
+1-no-vintage,wind,25
+2-vintage-standard,wind25,25
+2-vintage-standard,wind30,25
+2-vintage-standard,wind40,25
+2-vintage-standard,wind50,25
+3-vintage-compact,wind,25

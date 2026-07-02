@@ -1,0 +1,4 @@
+id,asset,milestone_year,commission_year,decommissionable,initial_units,investment_integer,solution
+1,wind,2030,2030,true,30.0,true,0.0
+2,wind,2040,2040,true,30.0,true,0.0
+3,wind,2050,2050,true,30.0,true,0.0
