@@ -23,7 +23,7 @@ _fix_version = (@isdefined fix_version) ? fix_version : false
 # Optionally, fix package versions to ensure compatibility
 _fix_version && begin
     println("adding core Tulipa packages ...")
-    Pkg.add(name="TulipaEnergyModel", version="0.21.0")
+    Pkg.add(name="TulipaEnergyModel", version="0.22.2julia")
     Pkg.add(name="TulipaIO", version="0.5.1")
     
     println("adding core supporting packages for Tulipa ...")
