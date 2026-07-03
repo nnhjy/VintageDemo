@@ -5,9 +5,10 @@ ensDK,demandDK,electricity,FALSE,0,1,1,0.02,FALSE
 ensNL,demandNL,electricity,FALSE,0,1,1,0.02,FALSE
 ensNO,demandNO,electricity,FALSE,0,1,1,0.02,FALSE
 ensUK,demandUK,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandBE,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandDE,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandDK,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandNL,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandNO,electricity,FALSE,0,1,1,0.02,FALSE
-wind,demandUK,electricity,FALSE,0,1,1,0.02,FALSE
+offshorehub,demandBE,electricity,TRUE,1,40,1,0.02,FALSE
+offshorehub,demandDE,electricity,TRUE,1,40,1,0.02,FALSE
+offshorehub,demandDK,electricity,TRUE,1,40,1,0.02,FALSE
+offshorehub,demandNL,electricity,TRUE,1,40,1,0.02,FALSE
+offshorehub,demandNO,electricity,TRUE,1,40,1,0.02,FALSE
+offshorehub,demandUK,electricity,TRUE,1,40,1,0.02,FALSE
+wind,offshorehub,electricity,FALSE,0,1,1,0.02,FALSE

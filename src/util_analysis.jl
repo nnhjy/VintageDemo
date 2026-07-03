@@ -2,9 +2,9 @@ using TulipaEnergyModel
 using JuMP
 using DuckDB
 using DataFrames
+import TulipaIO as TIO
 
-
-# Calculate annual flows between assets that contain specific terms
+# Calculate annual flows between groups of assets that contain specific terms
 # e.g., "wind" to "demand" or "ens" to "demand"
 function annual_flows_between_assets(
     DB_conn::DuckDB.DB, from_asset_term::String, to_asset_term::String
@@ -32,20 +32,41 @@ function annual_flows_between_assets(
     return df_flow_summary
 end
 
-function print_annual_total_prod(DB_conn::DuckDB.DB, years::Int...)
-    for year in years
-        println(year, "s")
-        filter(
-            row -> row.milestone_year == year, 
-            annual_flows_between_assets(DB_conn, "wind", "demand")
-        ) |> row -> println("\t wind prodution: $(sum(row.annual_flow)) TWh p.a.")
-        filter(
-            row -> row.milestone_year == year, 
-            annual_flows_between_assets(DB_conn, "ens", "demand")
-        ) |> row -> println("\t market supply: $(sum(row.annual_flow)) TWh p.a.")
+function annual_total_prods(
+    DB_conn::DuckDB.DB, from_asset_term::String, to_asset_term::String, milestone_year::Int
+)
+    filter(
+        row -> row.milestone_year == milestone_year,
+        annual_flows_between_assets(DB_conn, from_asset_term, to_asset_term)
+    ) |> row -> sum(row.annual_flow)
+end
+
+struct SystemCosts
+    total_cost::Float64
+    inv_cost::Float64
+    fixed_om_cost::Float64
+    variable_om_cost::Float64
+
+    function SystemCosts(inv_cost, fixed_om_cost, variable_om_cost)
+        total_cost = sum([inv_cost, fixed_om_cost, variable_om_cost])
+        return new(total_cost, inv_cost, fixed_om_cost, variable_om_cost)
     end
 end
 
+"""
+Obtain the total system costs for each category (investment, fixed O&M, variable O&M) from saved outputs (official breakdown).
+"""
+function total_system_costs_category(DB_conn::DuckDB.DB)::SystemCosts
+    obj_table = TIO.get_table(DB_conn, "obj_breakdown")
+    system_investment_cost = filter(row -> occursin("investment_cost", row.name), obj_table) |> row -> sum(row.value)
+    system_fixed_om_cost = filter(row -> occursin("fixed_cost", row.name), obj_table) |> row -> sum(row.value)
+    system_variable_om_cost = filter(row -> occursin("operational_cost", row.name), obj_table) |> row -> sum(row.value)
+    return SystemCosts(system_investment_cost, system_fixed_om_cost, system_variable_om_cost)
+end
+
+"""
+Obtain the total system costs for each category (investment, fixed O&M, variable O&M) from the JuMP model.
+"""
 function objective_terms_value(
     TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
     DB_conn::DuckDB.DB
