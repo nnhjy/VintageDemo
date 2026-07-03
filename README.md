@@ -5,7 +5,7 @@
 
 # Investment energy planning model with technology vintages
 
-- This model is built using [`TulipaEnergyModel.jl`](https://github.com/TulipaEnergy/TulipaEnergyModel.jl) framework (`v0.21.0`)
+- This model is built using [`TulipaEnergyModel.jl`](https://github.com/TulipaEnergy/TulipaEnergyModel.jl) framework (`v0.22.2`)
 - You may need to run the following command in terminal **First**!
 
 ```bash
