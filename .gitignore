@@ -30,7 +30,7 @@ TulipaTutorials/
 .vscode/
 *.code-workspace
 ReadmeEuler.md
-output-*
+output-*/
 *.zip
 slurm-*
 *benchmark*
