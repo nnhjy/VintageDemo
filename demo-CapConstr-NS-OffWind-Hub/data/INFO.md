@@ -75,7 +75,7 @@
 
 - file: [input_demand_w_profiles.xlsx](.\input_demand_w_profiles.xlsx)
 - source: [TYNDP2024 Demand Profiles](https://2024.entsos-tyndp-scenarios.eu/download/)
-- demand with timeseries profile
+- demand with timeseries profile (`asset-milestone.csv`, `asset-profiles.csv`, `profiles-rep-periods.csv`)
 
 ### Residue power supply (modelled as Energy Not Served, ENS)
 
