@@ -1,11 +1,11 @@
 name,value
-assets_investment_cost,286324.26116855774
-assets_fixed_cost_compact_vintage_method,151096.13489028867
+assets_investment_cost,291002.23095674335
+assets_fixed_cost_compact_vintage_method,152461.80436257186
 assets_fixed_cost_aggregated_vintage_method,0.0
 storage_assets_energy_investment_cost,0.0
 storage_assets_energy_fixed_cost,0.0
 flows_investment_cost,0.0
 flows_fixed_cost,0.0
-flows_operational_cost,325295.5977863329
+flows_operational_cost,327667.9782470715
 vintage_flows_operational_cost,0.0
 units_on_operational_cost,0.0
