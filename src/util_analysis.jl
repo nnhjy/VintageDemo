@@ -1,8 +1,69 @@
-using TulipaEnergyModel
+import TulipaEnergyModel as TEM
+import TulipaIO as TIO
 using JuMP
 using DuckDB
 using DataFrames
-import TulipaIO as TIO
+
+"""
+    append_run_report!(energy_problem, log_file; solver_log=nothing, remove_solver_log=true)
+
+Append two sections to the `log_file` created by `TEM.run_scenario(...; log_file=...)`
+(which by itself holds only the TimerOutputs table):
+
+  1. the `EnergyProblem` summary — `show(energy_problem)`, and
+  2. the full solver log read from `solver_log` (the file HiGHS wrote during the solve via the
+     `"log_file"` optimizer parameter).
+
+`solver_log` is deleted after being folded in when `remove_solver_log=true`. Returns `log_file`.
+"""
+function append_run_report!(
+    energy_problem::TEM.EnergyProblem,
+    log_file::AbstractString;
+    solver_log::Union{Nothing,AbstractString} = nothing,
+    remove_solver_log::Bool = true,
+)
+    # HiGHS keeps `solver_log` open after the solve; resetting the option to "" releases the
+    # handle (and flushes the file) so it can be fully read and deleted (needed on Windows).
+    if solver_log !== nothing && energy_problem.model !== nothing
+        try
+            # Set the option on the backend rather than via JuMP.set_optimizer_attribute:
+            # the latter's MOI.set(::GenericModel, ::AbstractOptimizerAttribute, ...) sets
+            # is_model_dirty=true, after which termination_status reports OPTIMIZE_NOT_CALLED
+            # and JuMP.value throws — even though HiGHS still holds the solution. Setting on
+            # backend(model) forwards the option straight to HiGHS (releasing the file handle)
+            # without touching is_model_dirty, so the solved results remain queryable.
+            JuMP.MOI.set(
+                JuMP.backend(energy_problem.model),
+                JuMP.MOI.RawOptimizerAttribute("log_file"),
+                "",
+            )
+        catch
+        end
+    end
+
+    open(log_file, "a") do io
+        println(io, "\n", "="^80)
+        println(io, "EnergyProblem summary")
+        println(io, "="^80)
+        show(io, energy_problem)          # reuses TulipaEnergyModel's Base.show
+        println(io)
+        if solver_log !== nothing && isfile(solver_log)
+            println(io, "\n", "="^80)
+            println(io, "Solver log")
+            println(io, "="^80)
+            write(io, read(solver_log, String))
+        end
+    end
+
+    if remove_solver_log && solver_log !== nothing && isfile(solver_log)
+        try
+            rm(solver_log; force = true)
+        catch err
+            @warn "Could not delete temporary solver log; leaving it in place." solver_log err
+        end
+    end
+    return log_file
+end
 
 # Calculate annual flows between groups of assets that contain specific terms
 # e.g., "wind" to "demand" or "ens" to "demand"
@@ -68,7 +129,7 @@ end
 Obtain the total system costs for each category (investment, fixed O&M, variable O&M) from the JuMP model.
 """
 function objective_terms_value(
-    TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
+    TulipaProblemInstance::TEM.EnergyProblem, 
     DB_conn::DuckDB.DB
 )
     system_investment_cost = _obj_investment_cost(TulipaProblemInstance, DB_conn)
@@ -80,7 +141,7 @@ function objective_terms_value(
     return system_investment_cost, system_fixed_om_cost, total_variable_om_cost
 end
 
-function _obj_investment_cost(TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, DB_conn::DuckDB.DB)
+function _obj_investment_cost(TulipaProblemInstance::TEM.EnergyProblem, DB_conn::DuckDB.DB)
     # investment cost calculation
     assets_investment = TulipaProblemInstance.variables[:assets_investment]
     indices = DuckDB.query(
@@ -111,7 +172,7 @@ function _obj_investment_cost(TulipaProblemInstance::TulipaEnergyModel.EnergyPro
 end
 
 function _obj_fixed_om_cost(
-    TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
+    TulipaProblemInstance::TEM.EnergyProblem, 
     DB_conn::DuckDB.DB, 
     ::Val{:vintage_method_aggregated}
 )
@@ -149,7 +210,7 @@ function _obj_fixed_om_cost(
 end
 
 function _obj_fixed_om_cost(
-    TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
+    TulipaProblemInstance::TEM.EnergyProblem, 
     DB_conn::DuckDB.DB, 
     ::Val{:vintage_method_compact}
 )
@@ -187,7 +248,7 @@ function _obj_fixed_om_cost(
 end
 
 function _obj_variable_om_cost(
-    TulipaProblemInstance::TulipaEnergyModel.EnergyProblem, 
+    TulipaProblemInstance::TEM.EnergyProblem, 
     DB_conn::DuckDB.DB
 )
     indices = DuckDB.query(
